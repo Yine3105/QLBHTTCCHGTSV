@@ -1,0 +1,245 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewBag.Title - Music Store</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/Content/giaodien.css" />
+    <link rel="stylesheet" href="~/Content/Create.css" />
+</head>
+<body>
+
+    <header class="header sticky-top">
+        <div class="promo">
+            <i class="fa-solid fa-gift"></i>
+            <span>TẶNG ÁO ELIXIR ĐƠN HÀNG TRÊN 3 TRIỆU – SỐ LƯỢNG CÓ HẠN</span>
+            <i class="fa-solid fa-gift"></i>
+        </div>
+        <div class="topbar d-none d-md-block">
+            <div class="container d-flex justify-content-between">
+                <div class="top-left">
+                    <a href="@Url.Action("KhuyenMai","Home")"><i class="fa-solid fa-gift"></i> Khuyến mãi</a>
+                    <a href="tel:0901234567"><i class="fa-solid fa-phone"></i> 039 403 3424 </a>
+                </div>
+                <div class="top-right">
+                    <a href="@Url.Action("KiemTraDonHang","Find")">
+                        <i class="fa-solid fa-box"></i> Kiểm tra đơn hàng
+                    </a>
+                    <a href="@Url.Action("Login","Account")">
+                        <i class="fa-solid fa-user"></i> Đăng nhập
+                    </a>
+                </div>
+            </div>
+        </div>
+        <!-- MAIN HEADER -->
+        <div class="main-header">
+            <div class="container d-flex align-items-center">
+
+                <button class="menu-btn d-lg-none" data-bs-toggle="collapse" data-bs-target="#mainMenu">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+
+                <a href="@Url.Action("Index","TrangChu")" class="logo">
+                    <span class="logo-main">Guitar</span>Store
+                </a>
+
+                <form class="search-box d-none d-md-flex">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" placeholder="Tìm kiếm sản phẩm..." />
+                </form>
+            </div>
+        </div>
+
+        <!-- NAV -->
+        <nav class="nav navbar-expand-lg">
+            <div class="container collapse navbar-collapse" id="mainMenu">
+                <ul>
+                    <li>@Html.ActionLink("Giới thiệu", "Index", "TrangChu")</li>
+                    <li>@Html.ActionLink("Tạo đơn hàng", "Create", "TrangChu")</li>
+                    <li>@Html.ActionLink("Tra cứu", "Find", "Home")</li>
+                    <li>@Html.ActionLink("Hóa đơn", "Bill", "Home")</li>
+
+                </ul>
+            </div>
+        </nav>
+
+    </header>
+
+    <!-- CONTENT -->
+    <main>
+        @RenderBody()
+    </main>
+
+    <footer class="site-footer">
+        <div class="container footer-top">
+            <div class="row">
+                <div class="col-lg-3 footer-col">
+                    <h4 class="footer-logo">
+                        <span>Guitar</span>Store
+                    </h4>
+                    <p>
+                        Hệ thống cửa hàng nhạc cụ uy tín hàng đầu Việt Nam.
+                        Chuyên cung cấp đàn piano, guitar, keyboard và các loại
+                        nhạc cụ chính hãng.
+                    </p>
+
+                    <div class="footer-social">
+                        <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
+                        <a href="#"><i class="fa-brands fa-youtube"></i></a>
+                        <a href="#"><i class="fa-brands fa-instagram"></i></a>
+                    </div>
+                </div>
+
+                <!-- LIÊN KẾT -->
+                <div class="col-lg-3 footer-col">
+                    <h5>Liên kết nhanh</h5>
+                    <ul>
+                        <li>Giới thiệu</li>
+                        <li>Tạo đơn hàng</li>
+                        <li>Tra cứu</li>
+                        <li>Hóa đơn</li>
+                    </ul>
+                </div>
+
+                <!-- CHÍNH SÁCH -->
+                <div class="col-lg-3 footer-col">
+                    <h5>Chính sách</h5>
+                    <ul>
+                        <li>Chính sách bảo hành</li>
+                        <li>Chính sách đổi trả</li>
+                        <li>Chính sách vận chuyển</li>
+                        <li>Hình thức thanh toán</li>
+                        <li>Bảo mật thông tin</li>
+                    </ul>
+                </div>
+
+                <!-- LIÊN HỆ -->
+                <div class="col-lg-3 footer-col">
+                    <h5>Liên hệ</h5>
+                    <ul class="footer-contact">
+                        <li>
+                            <i class="fa-solid fa-location-dot"></i>
+                            42 Lạc Thiện, Phường Vĩnh Phước, Nha Trang, VietNam
+                        </li>
+                        <li>
+                            <i class="fa-solid fa-phone"></i>
+                            039 403 3424
+                        </li>
+                        <li>
+                            <i class="fa-solid fa-envelope"></i>
+                            info@guitarstore.vn
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- COPYRIGHT -->
+        <div class="footer-bottom">
+            © 2025 GuitarStore. Tất cả quyền được bảo lưu.
+        </div>
+    </footer>
+    <script>
+        document.querySelectorAll(".filter").forEach(btn => {
+            btn.addEventListener("click", function () {
+
+                // Active button
+                document.querySelectorAll(".filter").forEach(b => b.classList.remove("active"));
+                this.classList.add("active");
+
+                const cat = this.dataset.cat;
+                const products = document.querySelectorAll(".product-card");
+
+                products.forEach(p => {
+                    if (cat === "all" || p.classList.contains(cat)) {
+                        p.style.display = "block";
+                    } else {
+                        p.style.display = "none";
+                    }
+                });
+            });
+        });
+    </script>
+    <script>
+        let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+        function saveCart() {
+            localStorage.setItem("cart", JSON.stringify(cart));
+            renderCart();
+        }
+
+        function addToCart(id, name, price) {
+            let item = cart.find(p => p.id == id);
+            if (item) {
+                item.qty++;
+            } else {
+                cart.push({ id, name, price, qty: 1 });
+            }
+            saveCart();
+        }
+
+        function updateQty(id, delta) {
+            let item = cart.find(p => p.id == id);
+            if (!item) return;
+
+            item.qty += delta;
+            if (item.qty <= 0) {
+                cart = cart.filter(p => p.id != id);
+            }
+            saveCart();
+        }
+
+        function renderCart() {
+            const list = document.getElementById("cartItems");
+            const count = document.getElementById("cartCount");
+            const totalEl = document.getElementById("cartTotal");
+
+            if (!list) return;
+
+            list.innerHTML = "";
+            let total = 0;
+            let qtySum = 0;
+
+            cart.forEach(p => {
+                total += p.price * p.qty;
+                qtySum += p.qty;
+
+                list.innerHTML += `
+                        <div class="cart-item">
+                            <div>
+                                <strong>${p.name}</strong><br/>
+                                ${p.price.toLocaleString()} đ
+                            </div>
+                            <div>
+                                <button onclick="updateQty(${p.id},-1)">-</button>
+                                ${p.qty}
+                                <button onclick="updateQty(${p.id},1)">+</button>
+                            </div>
+                        </div>
+                    `;
+            });
+
+            count.innerText = qtySum;
+            totalEl.innerText = total.toLocaleString() + " đ";
+        }
+
+        document.querySelectorAll(".add-cart").forEach(btn => {
+            btn.addEventListener("click", () => {
+                addToCart(
+                    btn.dataset.id,
+                    btn.dataset.name,
+                    parseInt(btn.dataset.price)
+                );
+            });
+        });
+
+        renderCart();
+    </script>
+
+    @RenderSection("Scripts", required: false)
+   
+</body>
+</html>

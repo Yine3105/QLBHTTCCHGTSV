@@ -97,6 +97,7 @@
             text-decoration: none;
         }
 
+    /* Bảng dữ liệu */
     .table-responsive {
         background: #1a1a1a;
         border-radius: 12px;
@@ -133,6 +134,7 @@
         .custom-table tr:hover {
             background-color: #2a2a2a;
         }
+
     /* Trạng thái đơn hàng (Badges) */
     .status-badge {
         padding: 6px 12px;
@@ -148,25 +150,25 @@
         color: #60a5fa;
         border: 1px solid rgba(59, 130, 246, 0.3);
     }
-    /* Xanh dương */
+
     .status-pending {
         background: rgba(245, 158, 11, 0.15);
         color: #f59e0b;
         border: 1px solid rgba(245, 158, 11, 0.3);
     }
-    /* Cam */
+
     .status-shipping {
         background: rgba(16, 185, 129, 0.15);
         color: #34d399;
         border: 1px solid rgba(16, 185, 129, 0.3);
     }
-    /* Xanh lá */
+
     .status-cancel {
         background: rgba(239, 68, 68, 0.15);
         color: #f87171;
         border: 1px solid rgba(239, 68, 68, 0.3);
     }
-    /* Đỏ */
+
     .status-default {
         background: rgba(255, 255, 255, 0.1);
         color: #ccc;
@@ -199,71 +201,79 @@
         font-style: italic;
     }
 
+    /* --- PHÂN TRANG HIỆN ĐẠI (MINIMALIST CIRCLE) --- */
     .pagination-container {
-        text-align: center;
-        margin-top: 20px;
+        margin-top: 30px;
+        display: flex;
+        flex-direction: column; /* Để dòng chữ "Trang..." nằm dưới */
+        align-items: center;
+        justify-content: center;
     }
 
+    /* Xóa style mặc định của thẻ ul */
     .pagination {
-        display: inline-flex;
+        display: flex;
         padding-left: 0;
         list-style: none;
-        border-radius: 8px;
-        background: #1a1a1a;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-        overflow: hidden; /* Bo góc */
+        gap: 8px; /* Khoảng cách giữa các nút */
+        margin: 0 0 10px 0;
     }
 
+        /* Style chung cho các nút (li > a, li > span) */
         .pagination > li > a,
         .pagination > li > span {
             position: relative;
-            float: left;
-            padding: 10px 18px;
-            line-height: 1.42857143;
-            text-decoration: none;
-            color: #ccc; /* Màu chữ thường */
-            background-color: #1a1a1a; /* Màu nền */
-            border: 1px solid #333; /* Viền tối */
+            float: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px; /* Kích thước cố định để nút tròn */
+            height: 40px;
+            border-radius: 50%; /* Biến thành hình tròn */
+
+            color: #888;
+            background-color: transparent; /* Nền trong suốt */
+            border: 1px solid #333;
             font-weight: 600;
-            transition: 0.3s;
+            font-size: 14px;
+            text-decoration: none;
+            transition: all 0.3s ease;
         }
 
-            /* Hiệu ứng Hover */
+            /* Hiệu ứng khi di chuột vào (Hover) */
             .pagination > li > a:hover,
-            .pagination > li > span:hover,
-            .pagination > li > a:focus,
-            .pagination > li > span:focus {
-                z-index: 2;
-                color: #000;
-                background-color: #f59e0b; /* Màu Cam khi di chuột */
+            .pagination > li > span:hover {
+                color: #fff;
                 border-color: #f59e0b;
+                background-color: rgba(245, 158, 11, 0.1);
+                transform: translateY(-2px);
+                box-shadow: 0 4px 10px rgba(245, 158, 11, 0.2);
             }
 
-        /* Trang đang chọn (Active) */
+        /* Trang ĐANG CHỌN (Active) */
         .pagination > .active > a,
         .pagination > .active > span,
         .pagination > .active > a:hover,
-        .pagination > .active > span:hover,
-        .pagination > .active > a:focus,
-        .pagination > .active > span:focus {
-            z-index: 3;
+        .pagination > .active > span:hover {
+            z-index: 2;
             color: #000;
-            background-color: #f59e0b; /* Nền Cam */
+            background-color: #f59e0b; /* Nền Cam đặc */
             border-color: #f59e0b;
             cursor: default;
+            box-shadow: 0 0 15px rgba(245, 158, 11, 0.5);
+            transform: scale(1.1);
         }
 
-        /* Nút bị vô hiệu hóa (Disabled) */
+        /* Nút bị Vô hiệu hóa (Disabled) */
         .pagination > .disabled > span,
-        .pagination > .disabled > span:hover,
-        .pagination > .disabled > span:focus,
         .pagination > .disabled > a,
-        .pagination > .disabled > a:hover,
-        .pagination > .disabled > a:focus {
-            color: #555;
-            background-color: #1a1a1a;
-            border-color: #333;
+        .pagination > .disabled > a:hover {
+            color: #444;
+            background-color: transparent;
+            border-color: #222;
             cursor: not-allowed;
+            box-shadow: none;
+            transform: none;
         }
 </style>
 
@@ -274,7 +284,7 @@
     </div>
 
     <div class="search-wrapper">
-        @using (Html.BeginForm("Find", "DONHANGs", FormMethod.Get, new { @style = "display:flex; width:100%; gap:15px;" }))
+        @using (Html.BeginForm("Index", "DONHANGs", FormMethod.Get, new { @style = "display:flex; width:100%; gap:15px;" }))
         {
             <input type="text" name="searchString" class="custom-input" placeholder="Nhập Mã đơn / Tên khách / SĐT..." value="@Request.QueryString["searchString"]" />
 
@@ -282,8 +292,8 @@
                 <i class="glyphicon glyphicon-search"></i> Tìm kiếm
             </button>
 
-            <a href="@Url.Action("Find", "DONHANGs")" class="btn-reset">
-                <i class="glyphicon glyphicon-refresh"></i> Hiện tất cả
+            <a href="@Url.Action("Index","DONHANGs")" class="btn-reset" title="Tải lại danh sách">
+                <i class="glyphicon glyphicon-refresh"></i> Làm mới
             </a>
         }
     </div>
@@ -350,10 +360,21 @@
             </tbody>
         </table>
     </div>
-    <div class="pagination-container">
-        Trang @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) / @Model.PageCount
 
+    <div class="pagination-container">
         @Html.PagedListPager(Model, page => Url.Action("Index",
-                 new { page, searchString = Request.QueryString["searchString"] }))
+             new { page, searchString = Request.QueryString["searchString"] }),
+             new PagedListRenderOptions
+                  {
+                 UlElementClasses = new string[] { "pagination" },
+                 LiElementClasses = new string[] { "page-item" },
+                 LinkToPreviousPageFormat = "❮",
+                 LinkToNextPageFormat = "❯",
+                 LinkToFirstPageFormat = "«",
+                 LinkToLastPageFormat = "»",
+                 MaximumPageNumbersToDisplay = 5,
+                 DisplayLinkToFirstPage = PagedListDisplayMode.Always,
+                 DisplayLinkToLastPage = PagedListDisplayMode.Always
+             })
     </div>
 </div>

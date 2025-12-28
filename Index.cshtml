@@ -1,0 +1,359 @@
+﻿@using PagedList.Mvc;
+@using PagedList;
+@model PagedList.IPagedList<cửa_hàng_sinh_viên_guitar.Models.DONHANG>
+
+@{
+    ViewBag.Title = "Tra cứu đơn hàng";
+    Layout = "~/Views/Shared/_giaodien.cshtml";
+}
+
+<style>
+    /* Container chính */
+    .lookup-container {
+        padding: 40px 0;
+        min-height: 80vh;
+    }
+
+    /* Tiêu đề trang */
+    .page-title {
+        text-align: center;
+        margin-bottom: 40px;
+    }
+
+        .page-title h2 {
+            font-size: 36px;
+            font-weight: 800;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .page-title span {
+            color: #f59e0b;
+        }
+
+    /* Form tìm kiếm */
+    .search-wrapper {
+        background: #1a1a1a;
+        padding: 20px;
+        border-radius: 12px;
+        margin-bottom: 30px;
+        display: flex;
+        gap: 15px;
+        border: 1px solid #333;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    }
+
+    .custom-input {
+        flex: 1;
+        background: #0f0f0f;
+        border: 1px solid #333;
+        color: #fff;
+        padding: 12px 20px;
+        border-radius: 8px;
+        font-size: 16px;
+        transition: 0.3s;
+    }
+
+        .custom-input:focus {
+            outline: none;
+            border-color: #f59e0b;
+            box-shadow: 0 0 8px rgba(245, 158, 11, 0.3);
+        }
+
+    .btn-search {
+        background: #f59e0b;
+        color: #000;
+        font-weight: 700;
+        padding: 0 30px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: 0.3s;
+        text-transform: uppercase;
+    }
+
+        .btn-search:hover {
+            background: #d97706;
+            transform: translateY(-2px);
+        }
+
+    .btn-reset {
+        background: #333;
+        color: #ccc;
+        font-weight: 600;
+        padding: 0 20px;
+        border: none;
+        border-radius: 8px;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        transition: 0.3s;
+    }
+
+        .btn-reset:hover {
+            background: #444;
+            color: #fff;
+            text-decoration: none;
+        }
+
+    .table-responsive {
+        background: #1a1a1a;
+        border-radius: 12px;
+        overflow: hidden;
+        border: 1px solid #333;
+    }
+
+    .custom-table {
+        width: 100%;
+        border-collapse: collapse;
+        color: #ddd;
+    }
+
+        .custom-table thead {
+            background: #252525;
+            border-bottom: 2px solid #333;
+        }
+
+        .custom-table th {
+            padding: 18px;
+            text-align: left;
+            font-weight: 700;
+            color: #f59e0b;
+            text-transform: uppercase;
+            font-size: 14px;
+        }
+
+        .custom-table td {
+            padding: 18px;
+            border-bottom: 1px solid #333;
+            vertical-align: middle;
+        }
+
+        .custom-table tr:hover {
+            background-color: #2a2a2a;
+        }
+    /* Trạng thái đơn hàng (Badges) */
+    .status-badge {
+        padding: 6px 12px;
+        border-radius: 6px;
+        font-size: 13px;
+        font-weight: 600;
+        display: inline-block;
+    }
+
+    /* Màu sắc trạng thái */
+    .status-new {
+        background: rgba(59, 130, 246, 0.15);
+        color: #60a5fa;
+        border: 1px solid rgba(59, 130, 246, 0.3);
+    }
+    /* Xanh dương */
+    .status-pending {
+        background: rgba(245, 158, 11, 0.15);
+        color: #f59e0b;
+        border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+    /* Cam */
+    .status-shipping {
+        background: rgba(16, 185, 129, 0.15);
+        color: #34d399;
+        border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+    /* Xanh lá */
+    .status-cancel {
+        background: rgba(239, 68, 68, 0.15);
+        color: #f87171;
+        border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+    /* Đỏ */
+    .status-default {
+        background: rgba(255, 255, 255, 0.1);
+        color: #ccc;
+        border: 1px solid #444;
+    }
+
+    /* Nút Chi tiết */
+    .btn-detail {
+        color: #ccc;
+        border: 1px solid #444;
+        padding: 6px 14px;
+        border-radius: 6px;
+        text-decoration: none;
+        font-size: 13px;
+        transition: 0.3s;
+    }
+
+        .btn-detail:hover {
+            border-color: #f59e0b;
+            color: #f59e0b;
+            background: rgba(245, 158, 11, 0.1);
+            text-decoration: none;
+        }
+
+    /* Thông báo không tìm thấy */
+    .no-data {
+        text-align: center;
+        padding: 40px;
+        color: #666;
+        font-style: italic;
+    }
+
+    .pagination-container {
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    .pagination {
+        display: inline-flex;
+        padding-left: 0;
+        list-style: none;
+        border-radius: 8px;
+        background: #1a1a1a;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        overflow: hidden; /* Bo góc */
+    }
+
+        .pagination > li > a,
+        .pagination > li > span {
+            position: relative;
+            float: left;
+            padding: 10px 18px;
+            line-height: 1.42857143;
+            text-decoration: none;
+            color: #ccc; /* Màu chữ thường */
+            background-color: #1a1a1a; /* Màu nền */
+            border: 1px solid #333; /* Viền tối */
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+            /* Hiệu ứng Hover */
+            .pagination > li > a:hover,
+            .pagination > li > span:hover,
+            .pagination > li > a:focus,
+            .pagination > li > span:focus {
+                z-index: 2;
+                color: #000;
+                background-color: #f59e0b; /* Màu Cam khi di chuột */
+                border-color: #f59e0b;
+            }
+
+        /* Trang đang chọn (Active) */
+        .pagination > .active > a,
+        .pagination > .active > span,
+        .pagination > .active > a:hover,
+        .pagination > .active > span:hover,
+        .pagination > .active > a:focus,
+        .pagination > .active > span:focus {
+            z-index: 3;
+            color: #000;
+            background-color: #f59e0b; /* Nền Cam */
+            border-color: #f59e0b;
+            cursor: default;
+        }
+
+        /* Nút bị vô hiệu hóa (Disabled) */
+        .pagination > .disabled > span,
+        .pagination > .disabled > span:hover,
+        .pagination > .disabled > span:focus,
+        .pagination > .disabled > a,
+        .pagination > .disabled > a:hover,
+        .pagination > .disabled > a:focus {
+            color: #555;
+            background-color: #1a1a1a;
+            border-color: #333;
+            cursor: not-allowed;
+        }
+</style>
+
+<div class="container lookup-container">
+
+    <div class="page-title">
+        <h2>Tra cứu <span>Đơn hàng</span></h2>
+    </div>
+
+    <div class="search-wrapper">
+        @using (Html.BeginForm("Find", "DONHANGs", FormMethod.Get, new { @style = "display:flex; width:100%; gap:15px;" }))
+        {
+            <input type="text" name="searchString" class="custom-input" placeholder="Nhập Mã đơn / Tên khách / SĐT..." value="@Request.QueryString["searchString"]" />
+
+            <button type="submit" class="btn-search">
+                <i class="glyphicon glyphicon-search"></i> Tìm kiếm
+            </button>
+
+            <a href="@Url.Action("Find", "DONHANGs")" class="btn-reset">
+                <i class="glyphicon glyphicon-refresh"></i> Hiện tất cả
+            </a>
+        }
+    </div>
+
+    <div class="table-responsive">
+        <table class="custom-table">
+            <thead>
+                <tr>
+                    <th>Mã Đơn</th>
+                    <th>Ngày tạo</th>
+                    <th>Khách hàng</th>
+                    <th>Nhân viên xử lý</th>
+                    <th>Trạng thái</th>
+                    <th class="text-center">Hành động</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Count() == 0)
+                {
+                    <tr>
+                        <td colspan="6" class="no-data">
+                            Không tìm thấy đơn hàng nào phù hợp!
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    foreach (var item in Model)
+                    {
+                        <tr>
+                            <td><strong style="color:#fff;">@Html.DisplayFor(modelItem => item.maDH)</strong></td>
+
+                            <td>@string.Format("{0:dd/MM/yyyy}", item.ngayTao)</td>
+
+                            <td>
+                                <div style="font-weight:600;">@Html.DisplayFor(modelItem => item.KHACHHANG.tenKH)</div>
+                                <div style="font-size:12px; color:#888;">@item.KHACHHANG.soDienThoai</div>
+                            </td>
+
+                            <td>@Html.DisplayFor(modelItem => item.NHANVIEN.tenNV)</td>
+
+                            <td>
+                                @{
+                                    string statusClass = "status-default";
+                                    string statusText = item.trangThaiDonHang;
+
+                                    if (statusText == "Mới") { statusClass = "status-new"; }
+                                    else if (statusText == "Chờ thanh toán") { statusClass = "status-pending"; }
+                                    else if (statusText == "Chờ xử lý") { statusClass = "status-pending"; }
+                                    else if (statusText == "Hoàn thành") { statusClass = "status-shipping"; }
+                                    else if (statusText == "Đã hủy") { statusClass = "status-cancel"; }
+                                }
+                                <span class="status-badge @statusClass">@statusText</span>
+                            </td>
+
+                            <td class="text-center">
+                                <a href="@Url.Action("Details", new { id = item.maDH })" class="btn-detail">
+                                    Xem chi tiết
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="pagination-container">
+        Trang @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) / @Model.PageCount
+
+        @Html.PagedListPager(Model, page => Url.Action("Index",
+                 new { page, searchString = Request.QueryString["searchString"] }))
+    </div>
+</div>

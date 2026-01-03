@@ -1,0 +1,284 @@
+﻿@model Project_65133295.Models.ThongKeViewModel
+
+@{
+    ViewBag.Title = "Thống kê lịch sử giao dịch";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+<style>
+    /* Custom Theme: Yellow - Black - White */
+    :root {
+        --theme-yellow: #FFD700; /* Gold/Yellow */
+        --theme-black: #1a1a1a;  /* Soft Black */
+        --theme-white: #ffffff;
+    }
+
+    .text-theme-yellow { color: #d4af37; } /* Darker golden for text readability on white */
+    .text-theme-black { color: var(--theme-black); }
+    
+    .bg-theme-yellow { background-color: var(--theme-yellow); color: var(--theme-black); }
+    .bg-theme-black { background-color: var(--theme-black); color: var(--theme-yellow); }
+    
+    .btn-theme {
+        background-color: var(--theme-yellow);
+        color: var(--theme-black);
+        border: 2px solid var(--theme-black);
+        font-weight: 600;
+        transition: all 0.3s;
+    }
+    .btn-theme:hover {
+        background-color: var(--theme-black);
+        color: var(--theme-yellow);
+        border-color: var(--theme-yellow);
+    }
+
+    .btn-theme-outline {
+        background-color: transparent;
+        color: var(--theme-black);
+        border: 2px solid var(--theme-black);
+        font-weight: 600;
+    }
+    .btn-theme-outline:hover {
+        background-color: var(--theme-black);
+        color: var(--theme-white);
+    }
+
+    .card-header-theme {
+        background-color: var(--theme-black);
+        color: var(--theme-yellow);
+        border-bottom: 3px solid var(--theme-yellow);
+    }
+
+    .table-head-theme {
+        background-color: var(--theme-black);
+        color: var(--theme-yellow);
+    }
+    
+    .page-title {
+        color: var(--theme-black);
+        font-weight: 800;
+        text-transform: uppercase;
+        border-left: 5px solid var(--theme-yellow);
+        padding-left: 15px;
+    }
+</style>
+
+<div class="container-fluid mt-4">
+    <h2 class="page-title mb-4">Thống kê lịch sử giao dịch khách hàng</h2>
+
+    <!-- Filter Section -->
+    <div class="card mb-4 shadow-sm border-0">
+        <div class="card-header card-header-theme">
+            <h5 class="mb-0"><i class="fas fa-filter me-2"></i>Bộ lọc thống kê</h5>
+        </div>
+        <div class="card-body bg-white border border-top-0">
+            @using (Html.BeginForm("ThongKe", "ThongKe", FormMethod.Get, new { @class = "row g-3" }))
+            {
+                <div class="col-md-3">
+                    <label for="fromDate" class="form-label fw-bold">Từ ngày</label>
+                    <input type="date" class="form-control border-dark" id="fromDate" name="fromDate" 
+                           value="@(Model.FromDate.HasValue ? Model.FromDate.Value.ToString("yyyy-MM-dd") : "")">
+                </div>
+                <div class="col-md-3">
+                    <label for="toDate" class="form-label fw-bold">Đến ngày</label>
+                    <input type="date" class="form-control border-dark" id="toDate" name="toDate" 
+                           value="@(Model.ToDate.HasValue ? Model.ToDate.Value.ToString("yyyy-MM-dd") : "")">
+                </div>
+                <div class="col-md-3">
+                    <label for="paymentMethod" class="form-label fw-bold">Phương thức TT</label>
+                    @Html.DropDownList("paymentMethod", (SelectList)ViewBag.PaymentMethods, "Tất cả", new { @class = "form-select border-dark" })
+                </div>
+                <div class="col-md-3">
+                    <label for="status" class="form-label fw-bold">Trạng thái ĐH</label>
+                    @Html.DropDownList("status", (SelectList)ViewBag.OrderStatuses, "Tất cả", new { @class = "form-select border-dark" })
+                </div>
+                <div class="col-12 mt-4 text-end">
+                    <a href="@Url.Action("ThongKe", "ThongKe")" class="btn btn-theme-outline me-2">Đặt lại</a>
+                    <button type="submit" class="btn btn-theme"><i class="fas fa-search me-1"></i> Thống kê</button>
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- Feedback Messages -->
+    @if (ViewBag.Error != null)
+    {
+        <div class="alert alert-danger border-danger text-danger bg-white" role="alert">
+            <i class="fas fa-exclamation-triangle"></i> @ViewBag.Error
+        </div>
+    }
+
+    <!-- Summary Section -->
+    <div class="row mb-4">
+        <!-- Card 1: Black -->
+        <div class="col-md-6 col-lg-3">
+            <div class="card bg-theme-black mb-3 shadow border-0">
+                <div class="card-body">
+                    <h5 class="card-title text-uppercase small opacity-75">Tổng số giao dịch</h5>
+                    <p class="card-text display-6 fw-bold">@Model.TotalTransactions</p>
+                </div>
+            </div>
+        </div>
+        <!-- Card 2: Yellow -->
+        <div class="col-md-6 col-lg-3">
+            <div class="card bg-theme-yellow mb-3 shadow border-0">
+                <div class="card-body">
+                    <h5 class="card-title text-uppercase small text-dark opacity-75">Tổng doanh thu</h5>
+                    <p class="card-text display-6 fw-bold text-dark">@Model.TotalRevenue.ToString("N0") <small class="fs-6">VND</small></p>
+                </div>
+            </div>
+        </div>
+        <!-- Card 3: White with details -->
+        <div class="col-md-6 col-lg-6">
+            <div class="card mb-3 shadow h-100 border-dark">
+                <div class="card-body">
+                    <h5 class="card-title fw-bold text-theme-black">Phân loại thanh toán</h5>
+                    <ul class="list-group list-group-flush">
+                        @foreach (var item in Model.CountByPaymentMethod)
+                        {
+                            <li class="list-group-item d-flex justify-content-between align-items-center border-0 px-0">
+                                <span class="fw-medium">@item.Key</span>
+                                <span class="badge bg-theme-black rounded-pill">@item.Value</span>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Data Table -->
+    <div class="card shadow border-0">
+        <div class="card-header bg-white border-bottom border-dark d-flex justify-content-between align-items-center py-3">
+            <h5 class="mb-0 fw-bold text-theme-black">Danh sách giao dịch</h5>
+            @if (Model.Transactions.Any())
+            {
+                <span class="badge bg-theme-yellow text-dark">@Model.Transactions.Count kết quả</span>
+            }
+        </div>
+        <div class="card-body p-0">
+            @if (Model.Transactions.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-head-theme">
+                            <tr>
+                                <th class="py-3 ps-3">Mã HD</th>
+                                <th class="py-3">Ngày TT</th>
+                                <th class="py-3">Khách hàng</th>
+                                <th class="py-3">Phương thức</th>
+                                <th class="py-3">Trạng thái</th>
+                                <th class="py-3 text-end pe-3">Tổng tiền</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Transactions)
+                            {
+                                <tr>
+                                    <td class="ps-3 fw-bold text-theme-black">@item.maHD</td>
+                                    <td>@item.ngayThanhToan.ToString("dd/MM/yyyy HH:mm")</td>
+                                    <td>
+                                        @if (item.DONHANG != null && item.DONHANG.KHACHHANG != null)
+                                        {
+                                            @item.DONHANG.KHACHHANG.tenKH
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">N/A</span>
+                                        }
+                                    </td>
+                                    <td>@item.phuongThucThanhToan</td>
+                                    <td>
+                                        @if (item.DONHANG != null)
+                                        {
+                                            if (item.DONHANG.trangThaiDonHang == "Hoàn thành" || item.DONHANG.trangThaiDonHang == "Đã giao")
+                                            {
+                                                <span class="badge bg-success">@item.DONHANG.trangThaiDonHang</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-secondary">@item.DONHANG.trangThaiDonHang</span>
+                                            }
+                                        }
+                                    </td>
+                                    <td class="text-end fw-bold text-danger pe-3">@item.tongTienPhaiTra.ToString("N0")</td>
+                                    <td class="text-center">
+                                        <button type="button" class="btn btn-sm btn-outline-dark rounded-circle" title="Xem chi tiết" 
+                                                onclick="showDetails('@item.maHD')">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="p-5 text-center text-muted">
+                    <i class="fas fa-box-open fa-3x mb-3 text-theme-yellow"></i>
+                    <p class="fw-bold">@ViewBag.Message</p>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- Modal Detail -->
+<div class="modal fade" id="detailModal" tabindex="-1" aria-labelledby="detailModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-theme-black text-theme-yellow">
+                <h5 class="modal-title" id="detailModalLabel">Chi tiết hóa đơn</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="detailModalBody">
+                <div class="text-center py-4">
+                    <div class="spinner-border text-warning" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function showDetails(maHD) {
+            // reset body to loading
+            $('#detailModalBody').html('<div class="text-center py-4"><div class="spinner-border text-warning" role="status"><span class="visually-hidden">Loading...</span></div></div>');
+            
+            // show modal
+            var myModal = new bootstrap.Modal(document.getElementById('detailModal'), {
+                keyboard: false
+            });
+            myModal.show();
+
+            // ajax fetch - use query parameter for better compatibility
+            $.ajax({
+                url: '@Url.Action("GetOrderDetails", "ThongKe")',
+                type: 'GET',
+                data: { id: maHD },
+                contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+                beforeSend: function(xhr) {
+                    xhr.overrideMimeType('text/html; charset=UTF-8');
+                },
+                success: function(data) {
+                    $('#detailModalBody').html(data);
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error loading details:', status, error);
+                    $('#detailModalBody').html('<div class="alert alert-danger">Không thể tải thông tin chi tiết. Lỗi: ' + error + '</div>');
+                }
+            });
+        }
+    </script>
+}

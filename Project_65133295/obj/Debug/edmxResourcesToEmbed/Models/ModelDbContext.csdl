@@ -1,0 +1,366 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="QLBHTTCCHGTSVModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="CHITIETDONHANG">
+    <Key>
+      <PropertyRef Name="maDH" />
+      <PropertyRef Name="maSP" />
+    </Key>
+    <Property Name="maDH" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="maSP" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="soLuong" Type="Int32" Nullable="false" />
+    <Property Name="donGiaLuuTru" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
+    <NavigationProperty Name="DONHANG" Relationship="Self.FK__CHITIETDON__maDH__5BE2A6F2" FromRole="CHITIETDONHANG" ToRole="DONHANG" />
+    <NavigationProperty Name="SANPHAM" Relationship="Self.FK__CHITIETDON__maSP__5CD6CB2B" FromRole="CHITIETDONHANG" ToRole="SANPHAM" />
+  </EntityType>
+  <EntityType Name="CHITIETHOADON">
+    <Key>
+      <PropertyRef Name="maHD" />
+      <PropertyRef Name="maSP" />
+    </Key>
+    <Property Name="maHD" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="maSP" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="soLuong" Type="Int32" Nullable="false" />
+    <Property Name="donGiaTaiThoiDiemThanhToan" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
+    <Property Name="thanhTien" Type="Decimal" Precision="29" Scale="2" annotation:StoreGeneratedPattern="Computed" />
+    <NavigationProperty Name="HOADON" Relationship="Self.FK__CHITIETHOA__maHD__6754599E" FromRole="CHITIETHOADON" ToRole="HOADON" />
+    <NavigationProperty Name="SANPHAM" Relationship="Self.FK__CHITIETHOA__maSP__68487DD7" FromRole="CHITIETHOADON" ToRole="SANPHAM" />
+  </EntityType>
+  <EntityType Name="DONHANG">
+    <Key>
+      <PropertyRef Name="maDH" />
+    </Key>
+    <Property Name="maDH" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="ngayTao" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="maNV" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="maKH" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="trangThaiDonHang" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="ghiChu" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="CHITIETDONHANGs" Relationship="Self.FK__CHITIETDON__maDH__5BE2A6F2" FromRole="DONHANG" ToRole="CHITIETDONHANG" />
+    <NavigationProperty Name="KHACHHANG" Relationship="Self.FK__DONHANG__maKH__5812160E" FromRole="DONHANG" ToRole="KHACHHANG" />
+    <NavigationProperty Name="NHANVIEN" Relationship="Self.FK__DONHANG__maNV__571DF1D5" FromRole="DONHANG" ToRole="NHANVIEN" />
+    <NavigationProperty Name="HOADONs" Relationship="Self.FK__HOADON__maDH__628FA481" FromRole="DONHANG" ToRole="HOADON" />
+  </EntityType>
+  <EntityType Name="HOADON">
+    <Key>
+      <PropertyRef Name="maHD" />
+    </Key>
+    <Property Name="maHD" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="maDH" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="ngayThanhToan" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="maNV" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="maKM" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="tongTienTamTinh" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
+    <Property Name="soTienGiamKM" Type="Decimal" Precision="18" Scale="2" />
+    <Property Name="tongTienPhaiTra" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
+    <Property Name="phuongThucThanhToan" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="CHITIETHOADONs" Relationship="Self.FK__CHITIETHOA__maHD__6754599E" FromRole="HOADON" ToRole="CHITIETHOADON" />
+    <NavigationProperty Name="DONHANG" Relationship="Self.FK__HOADON__maDH__628FA481" FromRole="HOADON" ToRole="DONHANG" />
+    <NavigationProperty Name="KHUYENMAI" Relationship="Self.FK__HOADON__maKM__6477ECF3" FromRole="HOADON" ToRole="KHUYENMAI" />
+    <NavigationProperty Name="NHANVIEN" Relationship="Self.FK__HOADON__maNV__6383C8BA" FromRole="HOADON" ToRole="NHANVIEN" />
+  </EntityType>
+  <EntityType Name="KHACHHANG">
+    <Key>
+      <PropertyRef Name="maKH" />
+    </Key>
+    <Property Name="maKH" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="tenKH" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="soDienThoai" Type="String" MaxLength="15" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="email" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="diaChi" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="loaiKH" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="maTaiKhoan" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="DONHANGs" Relationship="Self.FK__DONHANG__maKH__5812160E" FromRole="KHACHHANG" ToRole="DONHANG" />
+    <NavigationProperty Name="TAIKHOAN" Relationship="Self.FK__KHACHHANG__maTai__4F7CD00D" FromRole="KHACHHANG" ToRole="TAIKHOAN" />
+  </EntityType>
+  <EntityType Name="KHUYENMAI">
+    <Key>
+      <PropertyRef Name="maKM" />
+    </Key>
+    <Property Name="maKM" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="tenChuongTrinh" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="giaTriGiam" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
+    <Property Name="ngayHetHan" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="giaTriDonHangToiThieu" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
+    <NavigationProperty Name="HOADONs" Relationship="Self.FK__HOADON__maKM__6477ECF3" FromRole="KHUYENMAI" ToRole="HOADON" />
+  </EntityType>
+  <EntityType Name="NHANVIEN">
+    <Key>
+      <PropertyRef Name="maNV" />
+    </Key>
+    <Property Name="maNV" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="tenNV" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="ngaySinh" Type="DateTime" Precision="0" />
+    <Property Name="diaChi" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="dienThoai" Type="String" MaxLength="15" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="trangThaiLamViec" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="maTaiKhoan" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="DONHANGs" Relationship="Self.FK__DONHANG__maNV__571DF1D5" FromRole="NHANVIEN" ToRole="DONHANG" />
+    <NavigationProperty Name="HOADONs" Relationship="Self.FK__HOADON__maNV__6383C8BA" FromRole="NHANVIEN" ToRole="HOADON" />
+    <NavigationProperty Name="TAIKHOAN" Relationship="Self.FK__NHANVIEN__maTaiK__4CA06362" FromRole="NHANVIEN" ToRole="TAIKHOAN" />
+  </EntityType>
+  <EntityType Name="SANPHAM">
+    <Key>
+      <PropertyRef Name="maSP" />
+    </Key>
+    <Property Name="maSP" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="tenSP" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="giaBan" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
+    <Property Name="soLuongTon" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="CHITIETDONHANGs" Relationship="Self.FK__CHITIETDON__maSP__5CD6CB2B" FromRole="SANPHAM" ToRole="CHITIETDONHANG" />
+    <NavigationProperty Name="CHITIETHOADONs" Relationship="Self.FK__CHITIETHOA__maSP__68487DD7" FromRole="SANPHAM" ToRole="CHITIETHOADON" />
+  </EntityType>
+  <EntityType Name="sysdiagram">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="principal_id" Type="Int32" Nullable="false" />
+    <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="version" Type="Int32" />
+    <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="TAIKHOAN">
+    <Key>
+      <PropertyRef Name="maTaiKhoan" />
+    </Key>
+    <Property Name="maTaiKhoan" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="tenDangNhap" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="matKhau" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="vaiTro" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="KHACHHANGs" Relationship="Self.FK__KHACHHANG__maTai__4F7CD00D" FromRole="TAIKHOAN" ToRole="KHACHHANG" />
+    <NavigationProperty Name="NHANVIENs" Relationship="Self.FK__NHANVIEN__maTaiK__4CA06362" FromRole="TAIKHOAN" ToRole="NHANVIEN" />
+  </EntityType>
+  <Association Name="FK__CHITIETDON__maDH__5BE2A6F2">
+    <End Role="DONHANG" Type="Self.DONHANG" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="CHITIETDONHANG" Type="Self.CHITIETDONHANG" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="DONHANG">
+        <PropertyRef Name="maDH" />
+      </Principal>
+      <Dependent Role="CHITIETDONHANG">
+        <PropertyRef Name="maDH" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__CHITIETDON__maSP__5CD6CB2B">
+    <End Role="SANPHAM" Type="Self.SANPHAM" Multiplicity="1" />
+    <End Role="CHITIETDONHANG" Type="Self.CHITIETDONHANG" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="SANPHAM">
+        <PropertyRef Name="maSP" />
+      </Principal>
+      <Dependent Role="CHITIETDONHANG">
+        <PropertyRef Name="maSP" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__CHITIETHOA__maHD__6754599E">
+    <End Role="HOADON" Type="Self.HOADON" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="CHITIETHOADON" Type="Self.CHITIETHOADON" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="HOADON">
+        <PropertyRef Name="maHD" />
+      </Principal>
+      <Dependent Role="CHITIETHOADON">
+        <PropertyRef Name="maHD" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__CHITIETHOA__maSP__68487DD7">
+    <End Role="SANPHAM" Type="Self.SANPHAM" Multiplicity="1" />
+    <End Role="CHITIETHOADON" Type="Self.CHITIETHOADON" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="SANPHAM">
+        <PropertyRef Name="maSP" />
+      </Principal>
+      <Dependent Role="CHITIETHOADON">
+        <PropertyRef Name="maSP" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__DONHANG__maKH__5812160E">
+    <End Role="KHACHHANG" Type="Self.KHACHHANG" Multiplicity="1" />
+    <End Role="DONHANG" Type="Self.DONHANG" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="KHACHHANG">
+        <PropertyRef Name="maKH" />
+      </Principal>
+      <Dependent Role="DONHANG">
+        <PropertyRef Name="maKH" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__DONHANG__maNV__571DF1D5">
+    <End Role="NHANVIEN" Type="Self.NHANVIEN" Multiplicity="1" />
+    <End Role="DONHANG" Type="Self.DONHANG" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="NHANVIEN">
+        <PropertyRef Name="maNV" />
+      </Principal>
+      <Dependent Role="DONHANG">
+        <PropertyRef Name="maNV" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__HOADON__maDH__628FA481">
+    <End Role="DONHANG" Type="Self.DONHANG" Multiplicity="1" />
+    <End Role="HOADON" Type="Self.HOADON" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="DONHANG">
+        <PropertyRef Name="maDH" />
+      </Principal>
+      <Dependent Role="HOADON">
+        <PropertyRef Name="maDH" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__HOADON__maKM__6477ECF3">
+    <End Role="KHUYENMAI" Type="Self.KHUYENMAI" Multiplicity="0..1" />
+    <End Role="HOADON" Type="Self.HOADON" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="KHUYENMAI">
+        <PropertyRef Name="maKM" />
+      </Principal>
+      <Dependent Role="HOADON">
+        <PropertyRef Name="maKM" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__HOADON__maNV__6383C8BA">
+    <End Role="NHANVIEN" Type="Self.NHANVIEN" Multiplicity="1" />
+    <End Role="HOADON" Type="Self.HOADON" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="NHANVIEN">
+        <PropertyRef Name="maNV" />
+      </Principal>
+      <Dependent Role="HOADON">
+        <PropertyRef Name="maNV" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__KHACHHANG__maTai__4F7CD00D">
+    <End Role="TAIKHOAN" Type="Self.TAIKHOAN" Multiplicity="1" />
+    <End Role="KHACHHANG" Type="Self.KHACHHANG" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="TAIKHOAN">
+        <PropertyRef Name="maTaiKhoan" />
+      </Principal>
+      <Dependent Role="KHACHHANG">
+        <PropertyRef Name="maTaiKhoan" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__NHANVIEN__maTaiK__4CA06362">
+    <End Role="TAIKHOAN" Type="Self.TAIKHOAN" Multiplicity="1" />
+    <End Role="NHANVIEN" Type="Self.NHANVIEN" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="TAIKHOAN">
+        <PropertyRef Name="maTaiKhoan" />
+      </Principal>
+      <Dependent Role="NHANVIEN">
+        <PropertyRef Name="maTaiKhoan" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="QLBHTTCCHGTSVEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="CHITIETDONHANGs" EntityType="Self.CHITIETDONHANG" />
+    <EntitySet Name="CHITIETHOADONs" EntityType="Self.CHITIETHOADON" />
+    <EntitySet Name="DONHANGs" EntityType="Self.DONHANG" />
+    <EntitySet Name="HOADONs" EntityType="Self.HOADON" />
+    <EntitySet Name="KHACHHANGs" EntityType="Self.KHACHHANG" />
+    <EntitySet Name="KHUYENMAIs" EntityType="Self.KHUYENMAI" />
+    <EntitySet Name="NHANVIENs" EntityType="Self.NHANVIEN" />
+    <EntitySet Name="SANPHAMs" EntityType="Self.SANPHAM" />
+    <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagram" />
+    <EntitySet Name="TAIKHOANs" EntityType="Self.TAIKHOAN" />
+    <AssociationSet Name="FK__CHITIETDON__maDH__5BE2A6F2" Association="Self.FK__CHITIETDON__maDH__5BE2A6F2">
+      <End Role="DONHANG" EntitySet="DONHANGs" />
+      <End Role="CHITIETDONHANG" EntitySet="CHITIETDONHANGs" />
+    </AssociationSet>
+    <AssociationSet Name="FK__CHITIETDON__maSP__5CD6CB2B" Association="Self.FK__CHITIETDON__maSP__5CD6CB2B">
+      <End Role="SANPHAM" EntitySet="SANPHAMs" />
+      <End Role="CHITIETDONHANG" EntitySet="CHITIETDONHANGs" />
+    </AssociationSet>
+    <AssociationSet Name="FK__CHITIETHOA__maHD__6754599E" Association="Self.FK__CHITIETHOA__maHD__6754599E">
+      <End Role="HOADON" EntitySet="HOADONs" />
+      <End Role="CHITIETHOADON" EntitySet="CHITIETHOADONs" />
+    </AssociationSet>
+    <AssociationSet Name="FK__CHITIETHOA__maSP__68487DD7" Association="Self.FK__CHITIETHOA__maSP__68487DD7">
+      <End Role="SANPHAM" EntitySet="SANPHAMs" />
+      <End Role="CHITIETHOADON" EntitySet="CHITIETHOADONs" />
+    </AssociationSet>
+    <AssociationSet Name="FK__DONHANG__maKH__5812160E" Association="Self.FK__DONHANG__maKH__5812160E">
+      <End Role="KHACHHANG" EntitySet="KHACHHANGs" />
+      <End Role="DONHANG" EntitySet="DONHANGs" />
+    </AssociationSet>
+    <AssociationSet Name="FK__DONHANG__maNV__571DF1D5" Association="Self.FK__DONHANG__maNV__571DF1D5">
+      <End Role="NHANVIEN" EntitySet="NHANVIENs" />
+      <End Role="DONHANG" EntitySet="DONHANGs" />
+    </AssociationSet>
+    <AssociationSet Name="FK__HOADON__maDH__628FA481" Association="Self.FK__HOADON__maDH__628FA481">
+      <End Role="DONHANG" EntitySet="DONHANGs" />
+      <End Role="HOADON" EntitySet="HOADONs" />
+    </AssociationSet>
+    <AssociationSet Name="FK__HOADON__maKM__6477ECF3" Association="Self.FK__HOADON__maKM__6477ECF3">
+      <End Role="KHUYENMAI" EntitySet="KHUYENMAIs" />
+      <End Role="HOADON" EntitySet="HOADONs" />
+    </AssociationSet>
+    <AssociationSet Name="FK__HOADON__maNV__6383C8BA" Association="Self.FK__HOADON__maNV__6383C8BA">
+      <End Role="NHANVIEN" EntitySet="NHANVIENs" />
+      <End Role="HOADON" EntitySet="HOADONs" />
+    </AssociationSet>
+    <AssociationSet Name="FK__KHACHHANG__maTai__4F7CD00D" Association="Self.FK__KHACHHANG__maTai__4F7CD00D">
+      <End Role="TAIKHOAN" EntitySet="TAIKHOANs" />
+      <End Role="KHACHHANG" EntitySet="KHACHHANGs" />
+    </AssociationSet>
+    <AssociationSet Name="FK__NHANVIEN__maTaiK__4CA06362" Association="Self.FK__NHANVIEN__maTaiK__4CA06362">
+      <End Role="TAIKHOAN" EntitySet="TAIKHOANs" />
+      <End Role="NHANVIEN" EntitySet="NHANVIENs" />
+    </AssociationSet>
+    <FunctionImport Name="sp_alterdiagram">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+      <Parameter Name="version" Mode="In" Type="Int32" />
+      <Parameter Name="definition" Mode="In" Type="Binary" />
+    </FunctionImport>
+    <FunctionImport Name="sp_creatediagram">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+      <Parameter Name="version" Mode="In" Type="Int32" />
+      <Parameter Name="definition" Mode="In" Type="Binary" />
+    </FunctionImport>
+    <FunctionImport Name="sp_dropdiagram">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="sp_helpdiagramdefinition" ReturnType="Collection(QLBHTTCCHGTSVModel.sp_helpdiagramdefinition_Result)">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="sp_helpdiagrams" ReturnType="Collection(QLBHTTCCHGTSVModel.sp_helpdiagrams_Result)">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="sp_renamediagram">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+      <Parameter Name="new_diagramname" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="sp_upgraddiagrams" />
+  </EntityContainer>
+  <ComplexType Name="sp_helpdiagramdefinition_Result">
+    <Property Type="Int32" Name="version" Nullable="true" />
+    <Property Type="Binary" Name="definition" Nullable="true" />
+  </ComplexType>
+  <ComplexType Name="sp_helpdiagrams_Result">
+    <Property Type="String" Name="Database" Nullable="true" MaxLength="128" />
+    <Property Type="String" Name="Name" Nullable="false" MaxLength="128" />
+    <Property Type="Int32" Name="ID" Nullable="false" />
+    <Property Type="String" Name="Owner" Nullable="true" MaxLength="128" />
+    <Property Type="Int32" Name="OwnerID" Nullable="false" />
+  </ComplexType>
+</Schema>

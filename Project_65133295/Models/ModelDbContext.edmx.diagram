@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="6bea069e5b6a4728adf4e25bf2bb7f08" Name="Diagram1">
+        <EntityTypeShape EntityType="QLBHTTCCHGTSVModel.CHITIETDONHANG" Width="1.5" PointX="7.5" PointY="5.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="QLBHTTCCHGTSVModel.CHITIETHOADON" Width="1.5" PointX="9.75" PointY="9.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="QLBHTTCCHGTSVModel.DONHANG" Width="1.5" PointX="5.25" PointY="4.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="QLBHTTCCHGTSVModel.HOADON" Width="1.5" PointX="7.5" PointY="8.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="QLBHTTCCHGTSVModel.KHACHHANG" Width="1.5" PointX="3" PointY="3.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="QLBHTTCCHGTSVModel.KHUYENMAI" Width="1.5" PointX="5.25" PointY="9.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="QLBHTTCCHGTSVModel.NHANVIEN" Width="1.5" PointX="3" PointY="6.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="QLBHTTCCHGTSVModel.SANPHAM" Width="1.5" PointX="5.25" PointY="1.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="QLBHTTCCHGTSVModel.sysdiagram" Width="1.5" PointX="7.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="QLBHTTCCHGTSVModel.TAIKHOAN" Width="1.5" PointX="0.75" PointY="5.25" IsExpanded="true" />
+        <AssociationConnector Association="QLBHTTCCHGTSVModel.FK__CHITIETDON__maDH__5BE2A6F2" ManuallyRouted="false" />
+        <AssociationConnector Association="QLBHTTCCHGTSVModel.FK__CHITIETDON__maSP__5CD6CB2B" ManuallyRouted="false" />
+        <AssociationConnector Association="QLBHTTCCHGTSVModel.FK__CHITIETHOA__maHD__6754599E" ManuallyRouted="false" />
+        <AssociationConnector Association="QLBHTTCCHGTSVModel.FK__CHITIETHOA__maSP__68487DD7" ManuallyRouted="false" />
+        <AssociationConnector Association="QLBHTTCCHGTSVModel.FK__DONHANG__maKH__5812160E" ManuallyRouted="false" />
+        <AssociationConnector Association="QLBHTTCCHGTSVModel.FK__DONHANG__maNV__571DF1D5" ManuallyRouted="false" />
+        <AssociationConnector Association="QLBHTTCCHGTSVModel.FK__HOADON__maDH__628FA481" ManuallyRouted="false" />
+        <AssociationConnector Association="QLBHTTCCHGTSVModel.FK__HOADON__maKM__6477ECF3" ManuallyRouted="false" />
+        <AssociationConnector Association="QLBHTTCCHGTSVModel.FK__HOADON__maNV__6383C8BA" ManuallyRouted="false" />
+        <AssociationConnector Association="QLBHTTCCHGTSVModel.FK__KHACHHANG__maTai__4F7CD00D" ManuallyRouted="false" />
+        <AssociationConnector Association="QLBHTTCCHGTSVModel.FK__NHANVIEN__maTaiK__4CA06362" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

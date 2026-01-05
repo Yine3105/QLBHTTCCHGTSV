@@ -1,0 +1,247 @@
+﻿@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_giaodien.cshtml";
+}
+
+<div class="container my-4">
+    <div class="filter-header">
+        <h3>Chọn sản phẩm</h3>
+        <div class="filters">
+            <button class="filter active" data-cat="all">Tất cả</button>
+            <button class="filter" data-cat="acoustic">Acoustic</button>
+            <button class="filter" data-cat="electric">Electric</button>
+            <button class="filter" data-cat="classical">Classical</button>
+            <button class="filter" data-cat="bass">Bass</button>
+        </div>
+    </div>
+
+    <div class="product-grid">
+        <div class="product-card">
+            <img src="~/images/Sieupham.jpg" class="product-img" />
+            <div class="product-info">
+                <small>Taylor • ACOUSTIC</small>
+                <h4>Taylor 214ce DLX</h4>
+                <p>32.500.000 đ</p>
+                <button type="button" onclick="addToCart('SP001','Taylor 214ce DLX',32500000)">+ Thêm</button>
+            </div>
+        </div>
+        <div class="product-card">
+            <img src="~/images/denThui.jpg" class="product-img" />
+            <div class="product-info">
+                <small>Fender • ELECTRIC</small>
+                <h4>Fender Player Stratocaster</h4>
+                <p>18.500.000 đ</p>
+                <button type="button" onclick="addToCart('SP002','Fender Player Stratocaster',18500000)">+ Thêm</button>
+            </div>
+        </div>
+    </div>
+
+    <hr />
+
+    <h3>Giỏ hàng</h3>
+    <div id="cartItems"></div>
+    <strong>Tổng: <span id="cartTotal">0</span> đ</strong>
+
+    <br /><br />
+    <button type="button" onclick="showOrderForm()">Tạo đơn hàng</button>
+</div>
+
+<form method="post" action="@Url.Action("Create","TrangChu")">
+
+    <div id="orderForm" class="order-form" style="display:none; margin-top:40px">
+        <h3>📋 Thông tin khách hàng</h3>
+
+        <div class="form-group">
+            <label>Họ và tên <span>*</span></label>
+            <input type="text" name="TenKH" placeholder="Nhập họ tên đầy đủ" required />
+        </div>
+
+        <div class="form-group">
+            <label>Số điện thoại <span>*</span></label>
+            <input type="tel" name="SoDT" placeholder="VD: 0901234567" required />
+        </div>
+
+        <div class="form-group">
+            <label>Email</label>
+            <input type="email" name="Email" placeholder="email@example.com" />
+        </div>
+
+        <div class="form-group">
+            <label>Địa chỉ giao hàng <span>*</span></label>
+            <textarea name="DiaChi" rows="3" placeholder="Số nhà, đường, quận/huyện..." required></textarea>
+        </div>
+
+        <div class="form-group">
+            <label>Ghi chú</label>
+            <textarea name="GhiChu" rows="2" placeholder="Thời gian giao, yêu cầu thêm..."></textarea>
+        </div>
+
+        <input type="hidden" name="CartJson" id="CartJson" />
+        <input type="hidden" name="TienGiamGia" id="hiddenTienGiam" value="0" />
+
+        <button type="button" class="submit-btn" onclick="confirmOrder()">
+            ✔ Xác nhận đơn hàng
+        </button>
+    </div>
+
+
+    <div id="confirmBox" class="confirm-box" style="display:none; margin-top:30px">
+        <h3>Xác nhận đơn hàng</h3>
+
+        <h4>👤 Thông tin khách hàng</h4>
+        <p><strong>Họ tên:</strong> <span id="cfTenKH"></span></p>
+        <p><strong>SĐT:</strong> <span id="cfSoDT"></span></p>
+        <p><strong>Email:</strong> <span id="cfEmail"></span></p>
+        <p><strong>Địa chỉ:</strong> <span id="cfDiaChi"></span></p>
+        <p><strong>Ghi chú:</strong> <span id="cfGhiChu"></span></p>
+
+        <hr />
+
+        <h4>🛒 Sản phẩm</h4>
+        <div id="cfCart"></div>
+
+        <div style="background-color: #222; padding: 15px; border-radius: 8px; margin: 15px 0; border: 1px solid #444;">
+            <label style="color:white">Mã khuyến mãi:</label>
+            <div style="display:flex; gap: 10px;">
+                <input type="text" id="txtMaKM" class="form-control" placeholder="Nhập mã (VD: KM_NTU)" style="width: 200px;">
+                <button type="button" onclick="checkCode()" class="btn btn-secondary">Áp dụng</button>
+            </div>
+            <small id="msgKM" style="margin-top:5px; display:block; font-weight:bold"></small>
+        </div>
+
+        <p>Tạm tính: <span id="lblTamTinh">0</span> đ</p>
+        <p style="color:#0f0">Giảm giá: <span id="lblGiamGia">0</span> đ</p>
+        <p><strong>Thanh toán:</strong> <span id="cfTotal" style="color: #f1c40f; font-size: 1.5em;"></span> đ</p>
+
+        <button type="submit" style="margin-top: 10px;">Gửi đơn hàng</button>
+    </div>
+
+</form>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+    function saveCart() {
+        localStorage.setItem("cart", JSON.stringify(cart));
+        renderCart();
+    }
+
+    function addToCart(id, name, price) {
+        let item = cart.find(x => x.id === id);
+        if (item) item.qty++;
+        else cart.push({ id, name, price, qty: 1 });
+        saveCart();
+    }
+
+    function updateQty(id, change) {
+        let item = cart.find(x => x.id === id);
+        if (!item) return;
+        item.qty += change;
+        if (item.qty <= 0)
+            cart = cart.filter(x => x.id !== id);
+        saveCart();
+    }
+
+    function renderCart() {
+        let html = "";
+        let total = 0;
+
+        cart.forEach(p => {
+            total += p.price * p.qty;
+            html += `
+                <div style="display:flex;justify-content:space-between">
+                    <div>
+                        <strong>${p.name}</strong><br/>
+                        ${p.price.toLocaleString()} đ
+                    </div>
+                    <div>
+                        <button type="button" onclick="updateQty(${p.id},-1)">-</button>
+                        ${p.qty}
+                        <button type="button" onclick="updateQty(${p.id},1)">+</button>
+                    </div>
+                </div>`;
+        });
+        document.getElementById("cartItems").innerHTML = html;
+        document.getElementById("cartTotal").innerText = total.toLocaleString();
+    }
+
+    function showOrderForm() {
+        document.getElementById("orderForm").style.display = "block";
+    }
+
+    function confirmOrder() {
+        document.getElementById("CartJson").value = JSON.stringify(cart);
+
+        document.getElementById("cfTenKH").innerText = document.querySelector('[name="TenKH"]').value;
+        document.getElementById("cfSoDT").innerText = document.querySelector('[name="SoDT"]').value;
+        document.getElementById("cfEmail").innerText = document.querySelector('[name="Email"]').value;
+        document.getElementById("cfDiaChi").innerText = document.querySelector('[name="DiaChi"]').value;
+        document.getElementById("cfGhiChu").innerText = document.querySelector('[name="GhiChu"]').value;
+
+        let html = "";
+        let total = 0;
+        cart.forEach(p => {
+            total += p.price * p.qty;
+            html += `<div>${p.name} × ${p.qty} — ${(p.price * p.qty).toLocaleString()} đ</div>`;
+        });
+        document.getElementById("cfCart").innerHTML = html;
+
+        // --- CẬP NHẬT GIAO DIỆN TÍNH TIỀN ---
+        document.getElementById("lblTamTinh").innerText = total.toLocaleString(); // Tạm tính
+        document.getElementById("lblGiamGia").innerText = "0";                    // Reset giảm giá
+        document.getElementById("cfTotal").innerText = total.toLocaleString();    // Tổng thanh toán gốc
+        document.getElementById("hiddenTienGiam").value = 0;                      // Reset input ẩn
+        document.getElementById("msgKM").innerText = "";                          // Xóa thông báo
+
+        document.getElementById("orderForm").style.display = "none";
+        document.getElementById("confirmBox").style.display = "block";
+    }
+
+    // --- HÀM KIỂM TRA MÃ KHUYẾN MÃI (AJAX) ---
+    function checkCode() {
+        var code = $('#txtMaKM').val();
+
+        // Tính tổng tiền giỏ hàng hiện tại
+        var currentTotal = 0;
+        cart.forEach(p => { currentTotal += p.price * p.qty; });
+
+        $.ajax({
+            url: '/TrangChu/KiemTraKhuyenMai', // Đảm bảo bạn đã thêm hàm này ở Controller
+            type: 'POST',
+            data: { maKM: code },
+            success: function (res) {
+                var msgLabel = $('#msgKM');
+
+                if (res.success) {
+                    msgLabel.css('color', '#0f0').text(res.message); // Màu xanh
+
+                    var finalTotal = currentTotal - res.giamGia;
+                    if (finalTotal < 0) finalTotal = 0;
+
+                    $('#lblGiamGia').text('-' + res.giamGia.toLocaleString());
+                    $('#cfTotal').text(finalTotal.toLocaleString());
+                    $('#hiddenTienGiam').val(res.giamGia); // Gán vào input ẩn
+                } else {
+                    msgLabel.css('color', 'red').text(res.message); // Màu đỏ
+                    // Reset về ban đầu
+                    $('#lblGiamGia').text('0');
+                    $('#cfTotal').text(currentTotal.toLocaleString());
+                    $('#hiddenTienGiam').val(0);
+                }
+            },
+            error: function () {
+                alert("Lỗi kết nối! Bạn đã thêm hàm KiemTraKhuyenMai vào Controller chưa?");
+            }
+        });
+    }
+
+    renderCart();
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const overlay = document.getElementById("cartOverlay");
+        if (overlay) {
+            overlay.classList.add("hidden");
+        }
+    });
+</script>
